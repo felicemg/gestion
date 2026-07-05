@@ -1,7 +1,28 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+<script>
+    const PASSWORD = "Lekely#Miketrika"; // change le mot de passe ici
 
+(function () {
+
+    // déjà validé sur ce navigateur ?
+    if (localStorage.getItem("auth_ok") === "1") {
+        return;
+    }
+
+    let pass = prompt("Mot de passe :");
+
+    if (pass !== PASSWORD) {
+        document.body.innerHTML =
+            "<h1 style='text-align:center;margin-top:100px;color:red'>Accès refusé</h1>";
+        throw new Error("Accès refusé");
+    }
+
+    localStorage.setItem("auth_ok", "1");
+
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Gestionnaire Comptes</title>
@@ -60,28 +81,6 @@ table{
 
 </head>
 <body>
-<script>
-    const PASSWORD = "Lekely#Miketrika"; // change le mot de passe ici
-
-(function () {
-
-    // déjà validé sur ce navigateur ?
-    if (localStorage.getItem("auth_ok") === "1") {
-        return;
-    }
-
-    let pass = prompt("Mot de passe :");
-
-    if (pass !== PASSWORD) {
-        document.body.innerHTML =
-            "<h1 style='text-align:center;margin-top:100px;color:red'>Accès refusé</h1>";
-        throw new Error("Accès refusé");
-    }
-
-    localStorage.setItem("auth_ok", "1");
-
-})();
-</script>
 <div class="card">
 <!-- <h2>Ajouter un compte</h2> -->
 <!-- <h2>
