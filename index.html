@@ -1,6 +1,925 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+<meta charset="UTF-8">
+
+<style>
+html{display:none;}
+</style>
+
+<script>
+const PASSWORD = "Lekely#Miketrika";
+
+if (localStorage.getItem("auth_ok") === "1") {
+    document.documentElement.style.display = "block";
+} else {
+
+    const pass = prompt("Mot de passe :") || "";
+
+    if (pass === PASSWORD) {
+        localStorage.setItem("auth_ok", "1");
+        document.documentElement.style.display = "block";
+    } else {
+        document.body.innerHTML = "<h1>Accès refusé</h1>";
+        throw new Error("Accès refusé");
+    }
+}
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gestionnaire Comptes</title>
+<style>
+body{font-family:Arial;background:#f5f6fa;margin:20px}
+.card{background:#fff;padding:15px;border-radius:10px;margin-bottom:15px;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+input,button{padding:8px;margin:4px}
+table{width:100%;border-collapse:collapse;background:#fff}
+th,td{border:1px solid #ddd;padding:8px;text-align:center}
+/*.table-container{
+    height: calc(100vh - 180px);
+    overflow-y: auto;
+
+    scroll-snap-type: y mandatory;
+}
+
+tbody tr{
+    scroll-snap-align: start;
+}*/
+.table-container{
+    height: calc(100vh - 180px);
+    overflow-y: auto;
+    scroll-snap-type: y proximity; /* au lieu de mandatory */
+}
+
+tbody tr{
+    scroll-snap-align: start;
+    scroll-margin-top: 45px; /* hauteur du header */
+}
+
+/*.table-container{
+    height: calc(100vh - 180px);
+    overflow-y: auto;
+    border: 1px solid #ddd;
+}*/
+.table-container{
+    height: calc(100vh - 180px);
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    overflow-anchor: none;
+}
+thead th{
+    position: sticky;
+    top: 0;
+    background: #f0f0f0;
+    z-index: 100;
+}
+
+table{
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+</style>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+
+</head>
+<body>
+<div class="card">
+<!-- <h2>Ajouter un compte</h2> -->
+<!-- <h2>
+    Ajouter un compte
+    <span id="totalSemaine" style="font-size:16px;color:green"></span>
+</h2> -->
+<h2>
+    Ajouter un compte
+    <span id="totalPeriode" style="font-size:16px;color:green"></span>
+</h2>
+
+<div style="margin-top:8px">
+    Début :
+
+    <input type="date" id="dateDebut" onchange="updateTotalPeriode()">
+
+    Fin :
+    <input type="date" id="dateFin" onchange="updateTotalPeriode()">
+</div>
+<input id="u" placeholder="Username">
+
+<select id="mdl">
+    <option value="Annie" selected>Annie</option>
+    <option value="Milli">Milli</option>
+</select>
+
+<input id="f" type="number" placeholder="Followers" value="0">
+<input id="d" type="date">
+<input id="t" type="time">
+<button id="btnAdd" onclick="add()">Ajouter</button>
+<button onclick="exportUsernamesTxt()">Export TXT</button>
+<button onclick="exportUpdoTxt()">Export UPDO</button>
+<button onclick="exportJson()">Export JSON</button>
+<br>
+<div class="copy-buttons">
+    <button onclick="copyName('miakhalifa', this)">x1</button>
+    <button onclick="copyName('lanarhoades', this)">x2</button>
+    <button onclick="copyName('graciebon', this)">x3</button>
+    <button onclick="copyName('karelyruiz', this)">x4</button>
+    <button onclick="copyName('theangelawhite', this)">x5</button>
+    <span> | </span>
+    <button onclick="copyName('alex_mucci', this)">x6</button>
+    <button onclick="copyName('dangershewrote', this)">x7</button>
+    <button onclick="copyName('akadanidaniels', this)">x8</button>
+    <button onclick="copyName('imbrittanya', this)">x10</button>
+    <span> | </span>
+    <button onclick="copyName('ana.lorde', this)">x11</button>
+    <button onclick="copyName('jessyren', this)">x12</button>
+    <button onclick="copyName('taylerhillss', this)">x13</button>
+    <button onclick="copyName('bratnasty69', this)">x14</button>
+    <button onclick="copyName('waifuviolet', this)">x15</button>
+    <span> | </span>
+    <button onclick="copyName('letrileylive', this)">x16</button>
+    <button onclick="copyName('mosttalentedbaldman', this)">x17</button>
+    <button onclick="copyName('msjennastarr', this)">x18</button>
+    <button onclick="copyName('kayleygunner', this)">x19</button>
+    <button onclick="copyName('chasingainslee', this)">x20</button>
+    <span> | </span>
+    <button onclick="copyName('thekiranoirgram', this)">x21</button>
+    <button onclick="copyName('itskenziereeves', this)">x22</button>
+    <button onclick="copyName('lilylouofficial', this)">x23</button>
+    <button onclick="copyName('beyondlexpectations', this)">x24</button>
+    <button onclick="copyName('cocolovelockx', this)">x25</button>
+    <span> | </span>
+    <button onclick="copyName('thesiridahlagain', this)">x26</button>
+    <button onclick="copyName('theleanalovings', this)">x27</button>
+    <button onclick="copyName('msmayalynn_', this)">x28</button>
+    <button onclick="copyName('littlepucksplayhouse', this)">x29</button>
+    <button onclick="copyName('worshippinggoddesskat', this)">x30</button>
+    <span> | </span>
+    <button onclick="copyName('cyberdollsnack', this)">x31</button>
+    <button onclick="copyName('miamalkova', this)">x32</button>
+    <button onclick="copyName('luna5star', this)">x33</button>
+    <button onclick="copyName('zoeydigiacomo', this)">x34</button>
+    <button onclick="copyName('wildesexual_', this)">x35</button>
+    <span> | </span>
+    <button onclick="copyName('angelyoungsonly', this)">x36</button>
+    <button onclick="copyName('loveluluchu', this)">x37</button>
+    <button onclick="copyName('maybemollyyy', this)">x38</button>
+    <button onclick="copyName('haileyrosefcks', this)">x39</button>
+    <button onclick="copyName('katiemorganxoxox', this)">x40</button>
+    <span> | </span>
+    <button onclick="copyName('yourgreenguru', this)">x42</button>
+    <button onclick="copyName('lilystarfire.tv', this)">x43</button>
+    <button onclick="copyName('natashaniceofficial__', this)">x44</button>
+    <button onclick="copyName('theofficialwalrussimp', this)">x45</button>
+    <button onclick="copyName('RomiRain', this)">x46</button>
+    <button onclick="copyName('Paige_Gainz', this)">x47</button>
+    <button onclick="copyName('Therealkaliroses', this)">x48</button>
+</div>
+<br>
+<button onclick="copyName('cassidy.hrlwy', this)">OLV</button>
+<button onclick="copyName('hayden.btlr', this)">MSK</button>
+<button onclick="copyName('realdo', this)">1</button>
+<button onclick="copyName('cristiano', this)">2</button>
+<button onclick="copyName('Lana Rhoades', this)">3</button>
+<button onclick="copyName('Riley Reid', this)">4</button>
+<button onclick="copyName('Angela White', this)">5</button>
+<button onclick="copyName('Kendall Jenner', this)">6</button>
+<script>
+function exportJson() {
+
+    const data = {
+        comptes: JSON.parse(localStorage.getItem('comptes') || '[]'),
+        suivi: JSON.parse(localStorage.getItem('suivi') || '{}')
+    };
+
+    let blob = new Blob(
+        [JSON.stringify(data, null, 2)],
+        { type: 'application/json' }
+    );
+
+    let a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'data.json';
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    URL.revokeObjectURL(a.href);
+}
+    function exportUsernamesTxt() {
+
+    let comptes = JSON.parse(
+        localStorage.getItem('comptes') || '[]'
+    );
+
+    if (comptes.length === 0) {
+        alert("Aucun compte trouvé");
+        return;
+    }
+
+    let contenu = comptes
+        .map(c => c.username)
+        .join('\n');
+
+    let blob = new Blob(
+        [contenu],
+        { type: 'text/plain;charset=utf-8' }
+    );
+
+    let a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'usernames.txt';
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    URL.revokeObjectURL(a.href);
+}
+function updateTotalPeriode(){
+
+    const comptes = JSON.parse(
+        localStorage.getItem('comptes') || '[]'
+    );
+
+    const debut = document.getElementById('dateDebut').value;
+    const fin = document.getElementById('dateFin').value;
+
+    let total = 0;
+
+    comptes.forEach(c => {
+
+        const dateCompte = c.creationDate;
+
+        if(
+            (!debut || dateCompte >= debut) &&
+            (!fin || dateCompte <= fin)
+        ){
+            total++;
+        }
+    });
+
+    let texte = `(${total} comptes`;
+
+    if(debut || fin){
+        texte += ` du ${debut || '...'} au ${fin || '...'}`;
+    }
+
+    texte += ')';
+
+    document.getElementById('totalPeriode').textContent = texte;
+}
+function totalComptesSemaine() {
+
+    const comptes = JSON.parse(
+        localStorage.getItem('comptes') || '[]'
+    );
+
+    const now = new Date();
+
+    // Trouver le samedi précédent
+    const debut = new Date(now);
+    const jour = now.getDay(); // 0=dimanche, 6=samedi
+
+    const diff = (jour + 1) % 7;
+    debut.setDate(now.getDate() - diff);
+    debut.setHours(0,0,0,0);
+
+    // Vendredi 23:59:59
+    const fin = new Date(debut);
+    fin.setDate(fin.getDate() + 6);
+    fin.setHours(23,59,59,999);
+
+    let total = 0;
+
+    comptes.forEach(c => {
+
+        const d = new Date(c.creation.replace(' ','T'));
+
+        if (d >= debut && d <= fin) {
+            total++;
+        }
+    });
+
+    document.getElementById('totalSemaine').textContent =
+        `(${total} comptes cette semaine)`;
+}
+function copyName(name, element){
+
+    navigator.clipboard.writeText(name);
+
+    let txt = element.innerHTML;
+
+    element.innerHTML = '✅';
+
+    setTimeout(() => {
+        element.innerHTML = txt;
+    }, 30000);
+}
+function exportExcel() {
+
+    let comptes = JSON.parse(
+        localStorage.getItem('comptes') || '[]'
+    );
+
+    if (comptes.length === 0) {
+        alert("Aucun compte trouvé");
+        return;
+    }
+
+    let wb = XLSX.utils.book_new();
+
+    let data = comptes.map(c => {
+
+        let heure = "";
+
+        if (c.creation) {
+            let parts = c.creation.split(" ");
+            heure = parts[1] || "";
+        }
+
+        return {
+            Username: c.username,
+            DateCreation: c.creationDate,
+            HeureCreation: heure
+        };
+    });
+
+    let ws = XLSX.utils.json_to_sheet(data);
+
+    XLSX.utils.book_append_sheet(
+        wb,
+        ws,
+        "Comptes"
+    );
+
+    XLSX.writeFile(
+        wb,
+        "comptes.xlsx"
+    );
+}
+// function getTasksByFollowers(followers){
+
+//     followers = parseInt(followers || 0);
+
+//     if(followers < 50){
+//         return { rn: 2, re: 0 };
+//     }
+//     if(followers <= 100){
+//         return { rn: 3, re: 0 };
+//     }
+//     if(followers <= 200){
+//         return { rn: 4, re: 0 };
+//     }
+//     if(followers <= 500){
+//         return { rn: 5, re: 2 };
+//     }
+//     if(followers <= 1000){
+//         return { rn: 8, re: 4 };
+//     }
+//     if(followers <= 2000){
+//         return { rn: 10, re: 6 };
+//     }
+//     if(followers <= 5000){
+//         return { rn: 14, re: 8 };
+//     }
+//     if(followers <= 10000){
+//         return { rn: 18, re: 10 };
+//     }
+
+//     return { rn: 22, re: 15 };
+// }
+function getTasksByFollowers(followers){
+
+    followers = parseInt(followers || 0);
+
+    if(followers < 50) return ['RN1','RN2'];
+
+    if(followers <= 100)
+        return ['RN1','RN2','RN3'];
+
+    if(followers <= 200)
+        return ['RN1','RN2','RN3','RN4'];
+
+    if(followers <= 500)
+        return ['RN1','RN2','RN3','RN4','RN5','RE1','RE2'];
+
+    if(followers <= 1000)
+        return ['RN1','RN2','RN3','RN4','RN5','RN6','RN7','RN8',
+                'RE1','RE2','RE3','RE4'];
+
+    if(followers <= 2000)
+        return ['RN1','RN2','RN3','RN4','RN5','RN6','RN7','RN8','RN9','RN10',
+                'RE1','RE2','RE3','RE4','RE5','RE6'];
+
+    if(followers <= 5000)
+        return [
+            'RN1','RN2','RN3','RN4','RN5','RN6','RN7','RN8','RN9','RN10',
+            'RN11','RN12','RN13','RN14',
+            'RE1','RE2','RE3','RE4','RE5','RE6','RE7','RE8'
+        ];
+
+    if(followers <= 10000)
+        return [
+            'RN1','RN2','RN3','RN4','RN5','RN6','RN7','RN8','RN9','RN10',
+            'RN11','RN12','RN13','RN14','RN15','RN16','RN17','RN18',
+            'RE1','RE2','RE3','RE4','RE5','RE6','RE7','RE8','RE9','RE10'
+        ];
+
+    return [
+        'RN1','RN2','RN3','RN4','RN5','RN6','RN7','RN8','RN9','RN10',
+        'RN11','RN12','RN13','RN14','RN15','RN16','RN17','RN18',
+        'RN19','RN20','RN21','RN22',
+        'RE1','RE2','RE3','RE4','RE5','RE6','RE7','RE8',
+        'RE9','RE10','RE11','RE12','RE13','RE14','RE15'
+    ];
+}
+function exportUpdoTxt() {
+
+    let comptes = JSON.parse(
+        localStorage.getItem('comptes') || '[]'
+    );
+
+    if (comptes.length === 0) {
+        alert("Aucun compte trouvé");
+        return;
+    }
+
+    let contenu = comptes.map(c => {
+
+        let jc = diffJour(c.creation);
+        return `${c.mdl || 'Annie'}#${c.followers}#J${jc}`;
+        // return `${c.followers}#J${jc}`;
+
+    }).join('\n');
+
+    let blob = new Blob(
+        [contenu],
+        { type: 'text/plain;charset=utf-8' }
+    );
+
+    let a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'updo.txt';
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    URL.revokeObjectURL(a.href);
+}
+</script>
+
+</div>
+<div class="table-container">
+<div class="card">
+<h3 id="jour"></h3>
+</div>
+<table>
+<thead>
+<tr>
+<tr>
+<th>N°</th>
+<th>Compte</th>
+<th>MDL</th>
+<th>FOL</th>
+<th>Jour</th>
+<th>Tâche </th>
+<th>Heure</th>
+<th>Tâche suivante</th>
+<!-- <th>Tâche 2</th> -->
+<th>Heure</th>
+<th>Tâche </th><th>Heure</th><th>Action</th>
+</tr>
+</thead>
+<tbody id="tb"></tbody>
+</table>
+</div>
+
+<script>
+let comptes=JSON.parse(localStorage.getItem('comptes')||'[]');
+let suivi=JSON.parse(localStorage.getItem('suivi')||'{}');
+
+function save(){
+ localStorage.setItem('comptes',JSON.stringify(comptes));
+ localStorage.setItem('suivi',JSON.stringify(suivi));
+}
+
+function jourTravail(){
+ let d=new Date();
+ if(d.getHours()<7) d.setDate(d.getDate()-1);
+ return d.toISOString().slice(0,10);
+}
+
+function nowHM(){
+ return new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+}
+
+function plus3(h){
+ if(!h) return '';
+ let [hh,mm]=h.split(':').map(Number);
+ hh=(hh+3)%24;
+ return String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');
+}
+
+function add(){
+
+    let date=d.value, heure=t.value;
+
+    if(!date || !heure){
+
+        let n = new Date();
+
+        date =
+            n.getFullYear() + '-' +
+            String(n.getMonth()+1).padStart(2,'0') + '-' +
+            String(n.getDate()).padStart(2,'0');
+
+        heure = n.toTimeString().substring(0,5);
+    }
+
+    if(window.editingIndex !== undefined){
+
+        let c = comptes[window.editingIndex];
+        c.username = u.value;
+        c.mdl = mdl.value;
+        c.followers = parseInt(f.value) || 0;
+        c.creation = date+' '+heure;
+        c.creationDate = date;
+
+        window.editingIndex = undefined;
+
+        document.getElementById('btnAdd').innerText='Ajouter';
+
+        save();
+        render();
+        u.value = '';
+        d.value = '';
+        t.value = '';
+        f.value = 0;
+        u.focus();
+        return;
+    }
+    comptes.push({
+        username: u.value || '',
+        mdl: mdl.value,
+        followers: parseInt(f.value) || 0,
+        creation: date + ' ' + heure,
+        creationDate: date
+    });
+    // comptes.push({
+    //     username:u.value||'',
+    //     followers:parseInt(f.value)||0,
+    //     creation:date+' '+heure,
+    //     creationDate:date
+    // });
+    // comptes.push({
+    //     username:u.value||'',
+    //     creation:date+' '+heure,
+    //     creationDate:date
+    // });
+
+    save();
+    render();
+    u.value = '';
+    d.value = '';
+    t.value = '';
+    f.value = 0;
+    u.focus();
+    updateTotalPeriode();
+
+}
+
+function delUser(index){
+
+    let username = comptes[index]?.username || "Inconnu";
+
+    if(!confirm(`Supprimer le compte "${username}" ?`)) return;
+
+    comptes.splice(index,1);
+
+    save();
+    render();
+    updateTotalPeriode();
+}
+// function diffJour(cd){
+//  let c=new Date(cd);
+//  let t=new Date(jourTravail());
+//  let base=new Date(c.getFullYear(),c.getMonth(),c.getDate());
+//  return Math.max(1,Math.floor((t-base)/(86400000))+1);
+// }
+function diffJour(creation){
+
+    const c = new Date(creation.replace(' ', 'T'));
+    const now = new Date();
+
+    let jours = 1;
+
+    let passage = new Date(c);
+
+    // prochain 07h après la création
+    passage.setHours(7,0,0,0);
+
+    if(c >= passage){
+        passage.setDate(passage.getDate() + 1);
+    }
+
+    while(now >= passage){
+        jours++;
+        passage.setDate(passage.getDate() + 1);
+    }
+
+    return jours;
+}
+function check(user,type){
+ let j=jourTravail();
+ suivi[j] ??= {};
+ suivi[j][user] ??= {};
+ if(suivi[j][user][type]) return;
+ suivi[j][user][type]=nowHM();
+ save(); render();
+}
+function editUser(index){
+
+    let c = comptes[index];
+
+    u.value = c.username;
+    let parts = c.creation.split(' ');
+    d.value = parts[0];
+    t.value = parts[1];
+    mdl.value = c.mdl || 'Annie';
+    f.value = c.followers || 0;
+
+    window.editingIndex = index;
+
+    document.getElementById('btnAdd').innerText = 'Modifier';
+}
+
+const debut = [
+    "Just",
+    "Another",
+    "A few",
+    "Some",
+    "Little"
+];
+
+const milieu = [
+    "beautiful moments",
+    "memories",
+    "photos",
+    "snapshots",
+    "favorite pictures"
+];
+
+const fin = [
+    "💕",
+    "✨",
+    "🌸",
+    "🤍",
+    "💫"
+];
+
+function randomCaption(){
+    return `${debut[Math.floor(Math.random()*debut.length)]} ${
+        milieu[Math.floor(Math.random()*milieu.length)]
+    } ${fin[Math.floor(Math.random()*fin.length)]}`;
+}
+
+function copyLink(username, element){
+
+    let lien =
+        'https://getmysocial.com/' +
+        getMySocial(username);
+
+    navigator.clipboard.writeText(lien);
+
+    let ancienTexte = element.innerHTML;
+
+    element.innerHTML = '✅ Copié !';
+    element.style.color = 'green';
+    element.style.fontWeight = 'bold';
+
+    setTimeout(() => {
+        element.innerHTML = ancienTexte;
+        element.style.color = 'blue';
+        element.style.fontWeight = '';
+    }, 2000);
+}
+
+function copyFollow(username, element){
+
+    let texte = 'Follow @' + username + ' ❤️';
+
+    navigator.clipboard.writeText(texte);
+
+    let ancienTexte = element.innerHTML;
+
+    element.innerHTML = '✅ Copié !';
+    element.style.color = 'green';
+    element.style.fontWeight = 'bold';
+
+    setTimeout(() => {
+        element.innerHTML = ancienTexte;
+        element.style.color = '';
+        element.style.fontWeight = '';
+    }, 2000);
+}
+function copyRandomCaption(element){
+
+    const caption = randomCaption();
+
+    navigator.clipboard.writeText(caption);
+
+    const txt = element.innerHTML;
+
+    element.innerHTML = '✅ Copié !';
+
+    setTimeout(() => {
+        element.innerHTML = txt;
+    }, 2000);
+}
+function updateFollowers(index, value){
+    comptes[index].followers = parseInt(value) || 0;
+    save();
+}
+function render(){
+  // totalComptesSemaine();
+ let j=jourTravail();
+ document.getElementById('jour').innerText='Journée : '+j+' (07h → 07h)';
+ suivi[j] ??= {};
+ let html='';
+ comptes.forEach((c,index)=>{
+   let s=suivi[j][c.username]||{};
+   // let jc=diffJour(c.creationDate);
+   let jc = diffJour(c.creation);
+   if(jc<=3){
+      html+=`<tr>
+      <td>${index + 1}</td>
+      <td>
+        ${c.username}
+        <br>
+        <small
+            style="cursor:pointer;color:blue"
+            onclick="copyLink('${c.username}', this)"
+        >
+            https://getmysocial.com/${getMySocial(c.username)}
+        </small>
+        <br>
+        <small
+            id="follow_${index}"
+            style="cursor:pointer"
+            onclick="copyFollow('${c.username}', this)"
+            title="Cliquer pour copier"
+        >
+            Follow @${c.username} ❤️
+        </small>
+        <br>
+        <small
+            style="cursor:pointer;color:green"
+            onclick="copyRandomCaption(this)"
+            title="Cliquer pour copier un caption aléatoire"
+        >
+            📋 Caption Post
+        </small>
+        <br>
+        <small>${c.creation}</small>
+      </td>
+      <td>${c.mdl || 'Annie'}</td>
+      <td>
+        <input
+            type="number"
+            min="0"
+            value="${c.followers || 0}"
+            style="width:10px"
+            onchange="updateFollowers(${index}, this.value)"
+        >
+      </td>
+      <td>J${jc}</td>
+      <td><input type="checkbox" ${s.post?'checked disabled':''} onclick="check('${c.username}','post')"> Post ${jc}</td>
+      <td>${s.post||''}</td>
+      <td>Reel ${jc}<br>${plus3(s.post)}</td>
+      <td><input type="checkbox" ${s.reel?'checked disabled':''} onclick="check('${c.username}','reel')"> Reel ${jc}</td>
+      <td>${s.reel||''}</td>
+      <td>-</td>
+      <td>-</td>
+      <td>
+        <button onclick="editUser(${index})">✏️</button>
+        <button onclick="delUser(${index})">🗑️</button>
+      </td>
+      </tr>`;
+   }else{
+    let tasks = getTasksByFollowers(c.followers);
+
+    let part = Math.ceil(tasks.length / 3);
+
+    let col1 = tasks.slice(0, part);
+    let col2 = tasks.slice(part, part * 2);
+    let col3 = tasks.slice(part * 2);
+
+    html += `<tr>
+    <td>${index + 1}</td>
+
+    <td>
+        ${c.username}
+        <br>
+        <small
+            style="cursor:pointer;color:blue"
+            onclick="copyLink('${c.username}', this)"
+        >
+            https://getmysocial.com/${getMySocial(c.username)}
+        </small>
+        <br>
+        <small
+            id="follow_${index}"
+            style="cursor:pointer"
+            onclick="copyFollow('${c.username}', this)"
+        >
+            Follow @${c.username} ❤️
+        </small>
+        <br>
+        <small>${c.creation}</small>
+    </td>
+    <td>${c.mdl || 'Annie'}</td>
+    <td>${c.followers || 0}</td>
+
+    <td>J${jc}</td>
+
+    <td>
+        ${col1.map(t => `
+            <label>
+                <input type="checkbox"
+                    ${s[t] ? 'checked disabled' : ''}
+                    onclick="check('${c.username}','${t}')">
+                ${t}
+            </label><br>
+        `).join('')}
+    </td>
+
+    <td>
+        ${col1.map(t => s[t] || '').filter(Boolean).join('<br>')}
+    </td>
+
+    <td>
+        ${col2.map(t => `
+            <label>
+                <input type="checkbox"
+                    ${s[t] ? 'checked disabled' : ''}
+                    onclick="check('${c.username}','${t}')">
+                ${t}
+            </label><br>
+        `).join('')}
+    </td>
+
+    <td>
+        ${col2.map(t => s[t] || '').filter(Boolean).join('<br>')}
+    </td>
+
+    <td>
+        ${col3.map(t => `
+            <label>
+                <input type="checkbox"
+                    ${s[t] ? 'checked disabled' : ''}
+                    onclick="check('${c.username}','${t}')">
+                ${t}
+            </label><br>
+        `).join('')}
+
+        <hr>
+
+        <label>
+            <input type="checkbox"
+                ${s.story ? 'checked disabled' : ''}
+                onclick="check('${c.username}','story')">
+            Story
+        </label>
+    </td>
+
+    <td>
+        ${col3.map(t => s[t] || '').filter(Boolean).join('<br>')}
+        ${s.story ? '<br>' + s.story : ''}
+    </td>
+
+    <td>
+        <button onclick="editUser(${index})">✏️</button>
+        <button onclick="delUser(${index})">🗑️</button>
+    </td>
+
+    </tr>`;
+}
+ });
+ document.getElementById('tb').innerHTML=html;
+ updateTotalPeriode();
+}
+function getMySocial(username){
+    return username
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g,'');
+}
+
+render();
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="fr">
+<head>
 <script>
 const PASSWORD = "Lekely#Miketrika";
 
