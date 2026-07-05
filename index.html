@@ -1,6 +1,20 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <script>
+const PASSWORD = "123456";
+
+if (localStorage.getItem("auth_ok") !== "1") {
+    let pass = prompt("Mot de passe :");
+
+    if (pass === PASSWORD) {
+        localStorage.setItem("auth_ok", "1");
+    } else {
+        document.write("Accès refusé");
+        throw new Error("Accès refusé");
+    }
+}
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Gestionnaire Comptes</title>
@@ -867,26 +881,7 @@ function getMySocial(username){
         .toLowerCase()
         .replace(/[^a-z0-9]/g,'');
 }
-const PASSWORD = "Lekely#Miketrika"; // change le mot de passe ici
 
-(function () {
-
-    // déjà validé sur ce navigateur ?
-    if (localStorage.getItem("auth_ok") === "1") {
-        return;
-    }
-
-    let pass = prompt("Mot de passe :");
-
-    if (pass !== PASSWORD) {
-        document.body.innerHTML =
-            "<h1 style='text-align:center;margin-top:100px;color:red'>Accès refusé</h1>";
-        throw new Error("Accès refusé");
-    }
-
-    localStorage.setItem("auth_ok", "1");
-
-})();
 render();
 </script>
 </body>
