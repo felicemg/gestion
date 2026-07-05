@@ -985,8 +985,32 @@ function getMySocial(username){
         .toLowerCase()
         .replace(/[^a-z0-9]/g,'');
 }
+async function init(){
 
-render();
+    try{
+
+        const data = await loadGithub();
+
+        comptes = data.comptes || [];
+        suivi = data.suivi || {};
+
+    }catch(e){
+
+        console.log('Impossible de charger GitHub', e);
+
+        comptes = JSON.parse(
+            localStorage.getItem('comptes') || '[]'
+        );
+
+        suivi = JSON.parse(
+            localStorage.getItem('suivi') || '{}'
+        );
+    }
+
+    render();
+}
+
+init();
 </script>
 </body>
 </html>
