@@ -2,14 +2,7 @@
 <html lang="fr">
 <head>
 <script>
-    const PASSWORD = "Lekely#Miketrika"; // change le mot de passe ici
-
-(function () {
-
-    // déjà validé sur ce navigateur ?
-    if (localStorage.getItem("auth_ok") === "1") {
-        return;
-    }
+    const PASSWORD = "Lekely#Miketrika";
 
     let pass = prompt("Mot de passe :");
 
@@ -18,10 +11,6 @@
             "<h1 style='text-align:center;margin-top:100px;color:red'>Accès refusé</h1>";
         throw new Error("Accès refusé");
     }
-
-    localStorage.setItem("auth_ok", "1");
-
-})();
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
