@@ -59,7 +59,6 @@ table{
 
 </head>
 <body>
-
 <div class="card">
 <!-- <h2>Ajouter un compte</h2> -->
 <!-- <h2>
@@ -73,6 +72,7 @@ table{
 
 <div style="margin-top:8px">
     Début :
+
     <input type="date" id="dateDebut" onchange="updateTotalPeriode()">
 
     Fin :
@@ -91,6 +91,7 @@ table{
 <button id="btnAdd" onclick="add()">Ajouter</button>
 <button onclick="exportUsernamesTxt()">Export TXT</button>
 <button onclick="exportUpdoTxt()">Export UPDO</button>
+<button onclick="exportJson()">Export JSON</button>
 <br>
 <div class="copy-buttons">
     <button onclick="copyName('miakhalifa', this)">x1</button>
@@ -158,6 +159,28 @@ table{
 <button onclick="copyName('Angela White', this)">5</button>
 <button onclick="copyName('Kendall Jenner', this)">6</button>
 <script>
+function exportJson() {
+
+    const data = {
+        comptes: JSON.parse(localStorage.getItem('comptes') || '[]'),
+        suivi: JSON.parse(localStorage.getItem('suivi') || '{}')
+    };
+
+    let blob = new Blob(
+        [JSON.stringify(data, null, 2)],
+        { type: 'application/json' }
+    );
+
+    let a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'data.json';
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    URL.revokeObjectURL(a.href);
+}
     function exportUsernamesTxt() {
 
     let comptes = JSON.parse(
@@ -694,7 +717,6 @@ function updateFollowers(index, value){
     comptes[index].followers = parseInt(value) || 0;
     save();
 }
-
 function render(){
   // totalComptesSemaine();
  let j=jourTravail();
@@ -868,6 +890,26 @@ function getMySocial(username){
         .toLowerCase()
         .replace(/[^a-z0-9]/g,'');
 }
+const PASSWORD = "Lekely#Miketrika"; // change le mot de passe ici
+
+(function () {
+
+    // déjà validé sur ce navigateur ?
+    if (localStorage.getItem("auth_ok") === "1") {
+        return;
+    }
+
+    let pass = prompt("Mot de passe :");
+
+    if (pass !== PASSWORD) {
+        document.body.innerHTML =
+            "<h1 style='text-align:center;margin-top:100px;color:red'>Accès refusé</h1>";
+        throw new Error("Accès refusé");
+    }
+
+    localStorage.setItem("auth_ok", "1");
+
+})();
 render();
 </script>
 </body>
