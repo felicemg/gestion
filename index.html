@@ -59,20 +59,7 @@ table{
 
 </head>
 <body>
-<script>
-const PASSWORD = "123456";
 
-if (localStorage.getItem("auth_ok") !== "1") {
-    let pass = prompt("Mot de passe :");
-
-    if (pass === PASSWORD) {
-        localStorage.setItem("auth_ok", "1");
-    } else {
-        document.write("Accès refusé");
-        throw new Error("Accès refusé");
-    }
-}
-</script>
 <div class="card">
 <!-- <h2>Ajouter un compte</h2> -->
 <!-- <h2>
@@ -881,7 +868,18 @@ function getMySocial(username){
         .toLowerCase()
         .replace(/[^a-z0-9]/g,'');
 }
+const PASSWORD = "Lekely#Miketrika";
 
+if (localStorage.getItem("auth_ok") !== "1") {
+    let pass = prompt("Mot de passe :");
+
+    if (pass === PASSWORD) {
+        localStorage.setItem("auth_ok", "1");
+    } else {
+        document.write("Accès refusé");
+        throw new Error("Accès refusé");
+    }
+}
 render();
 </script>
 </body>
