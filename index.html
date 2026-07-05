@@ -1,20 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <script>
-const PASSWORD = "123456";
-
-if (localStorage.getItem("auth_ok") !== "1") {
-    let pass = prompt("Mot de passe :");
-
-    if (pass === PASSWORD) {
-        localStorage.setItem("auth_ok", "1");
-    } else {
-        document.write("Accès refusé");
-        throw new Error("Accès refusé");
-    }
-}
-</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Gestionnaire Comptes</title>
@@ -73,6 +59,20 @@ table{
 
 </head>
 <body>
+<script>
+const PASSWORD = "123456";
+
+if (localStorage.getItem("auth_ok") !== "1") {
+    let pass = prompt("Mot de passe :");
+
+    if (pass === PASSWORD) {
+        localStorage.setItem("auth_ok", "1");
+    } else {
+        document.write("Accès refusé");
+        throw new Error("Accès refusé");
+    }
+}
+</script>
 <div class="card">
 <!-- <h2>Ajouter un compte</h2> -->
 <!-- <h2>
