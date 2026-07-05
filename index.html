@@ -2,15 +2,22 @@
 <html lang="fr">
 <head>
 <script>
-    const PASSWORD = "Lekely#Miketrika";
+const PASSWORD = "Lekely#Miketrika";
 
-    let pass = prompt("Mot de passe :");
+if (localStorage.getItem("auth_ok") !== "1") {
 
-    if (pass !== PASSWORD) {
-        document.body.innerHTML =
-            "<h1 style='text-align:center;margin-top:100px;color:red'>Accès refusé</h1>";
+    const pass = prompt("Mot de passe :") || "";
+
+    if (pass === PASSWORD) {
+        localStorage.setItem("auth_ok", "1");
+    } else {
+        alert("Mot de passe incorrect");
+
+        document.documentElement.innerHTML = "";
+
         throw new Error("Accès refusé");
     }
+}
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
